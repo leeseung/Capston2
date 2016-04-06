@@ -12,13 +12,12 @@
         android:layout_alignParentTop="true"
         android:text=""
         android:textSize="25sp" />
-    <TextView
-        android:id="@+id/TextView"
+    <ImageView
+        android:id="@+id/ImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:text=""
         android:textSize="25sp"
         android:layout_above="@+id/btnConfirm"
         android:layout_below="@+id/TitleView" />>

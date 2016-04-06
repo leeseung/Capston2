@@ -33,6 +33,8 @@ import android.view.Window;
 import android.widget.Button;
 
 
+import com.androidquery.AQuery;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     NotificationManager mNotificationManager;
 
     String responseDetails;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

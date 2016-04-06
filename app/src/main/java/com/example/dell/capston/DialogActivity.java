@@ -10,29 +10,34 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.androidquery.AQuery;
 
 public class DialogActivity extends Activity implements
         OnClickListener {
 
     private Button mConfirm, mCancel;
-    private TextView titleview,textview;
+    private TextView titleview;
+    private AQuery aq;
+    private ImageView img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.push);
-
+        aq = new AQuery( this );
 
         Intent intent = getIntent();
         String pw = intent.getStringExtra("PW");
         String name = intent.getStringExtra("NAME");
         titleview = (TextView) findViewById(R.id.TitleView);
-        textview = (TextView) findViewById(R.id.TextView);
+        img = (ImageView) findViewById(R.id.ImageView);
 
         titleview.setText(pw);
-        titleview.setText(name);
+        aq.id( img ).image("http://image.slidesharecdn.com/androidstudio-130904110409-/95/android-studio-1-638.jpg?cb=1378292683");
 
         setContent();
     }
