@@ -35,7 +35,9 @@ import android.widget.Button;
 
 import com.androidquery.AQuery;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     NotificationManager mNotificationManager;
 
     String responseDetails;
-
+    String Filename;
 
 
     @Override
@@ -149,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         StringBuffer sb = new StringBuffer();
         try {
 
-            //주어진 URL 문서의 내용을 문자열로 얻는다.
+           /* //주어진 URL 문서의 내용을 문자열로 얻는다.
             String jsonPage = getStringFromUrl("http://ajax.googleapis.com/ajax/services/search/images?");
 
             //읽어들인 JSON포맷의 데이터를 JSON객체로 변환
@@ -164,7 +166,25 @@ public class MainActivity extends AppCompatActivity {
             sb.append("\n");
 
             //sendNotification("gggg", responseDetails);
-            sendCenterPush("gggg", responseDetails);
+            sendCenterPush("gggg", responseDetails);*/
+
+             //주어진 URL 문서의 내용을 문자열로 얻는다.
+            String jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
+
+            JSONObject obj = new JSONObject(jsonPage); //
+            JSONArray List = obj.getJSONArray("List");
+
+            JSONObject info = List.getJSONObject(0);
+            Filename = info.getString("Filename");
+
+
+
+    // sb.append("[ "+responseData+" ]\n");
+            sb.append(Filename + "\n");
+            sb.append("\n");
+
+            //sendNotification("gggg", responseDetails);
+            sendCenterPush(Filename, Filename);
 
 
 
