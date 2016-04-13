@@ -20,25 +20,22 @@
                 android:layout_height="fill_parent"
                 android:id="@+id/settings"
                 android:orientation="vertical">
-                <ToggleButton
+                <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textOff="Json 1번"
-                    android:textOn="Json 1번 클릭"
+                    android:text="Json 1번"
                     android:id="@+id/Btn1"
                     />
-                <ToggleButton
+                <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textOff="Json 2번"
-                    android:textOn="Json 2번 클릭"
-                    android:id="@+id/Btn2"
+                    android:text="Json 2번"
+                android:id="@+id/Btn2"
                    />
-                <ToggleButton
+                <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textOff="Json 3번"
-                    android:textOn="Json 3번 클릭"
+                    android:text="Json 3번"
                     android:id="@+id/Btn3"
                      />
 

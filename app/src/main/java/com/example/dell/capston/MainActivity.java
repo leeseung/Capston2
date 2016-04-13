@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textview;
     String result = "";
     String display = "";
-    ToggleButton Button1,Button2,Button3;
+    Button Button1,Button2,Button3;
     EditText et_webpage_src;
     NotificationManager mNotificationManager;
 
@@ -101,22 +101,43 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        Button1=  (ToggleButton)findViewById(R.id.Btn1);
-        Button2=  (ToggleButton)findViewById(R.id.Btn2);
-        Button3=  (ToggleButton)findViewById(R.id.Btn3);
+        Button1=  (Button)findViewById(R.id.Btn1);
+        Button2=  (Button)findViewById(R.id.Btn2);
+        Button3=  (Button)findViewById(R.id.Btn3);
 
         Button1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                //new JsonLoadingTask().execute(); //Async스레드를 시작
-               if (Button1.isChecked()) {
+                new JsonLoadingTask1().execute(); //Async스레드를 시작
+
+              /* if (Button1.isChecked()) {
 
                     //et_webpage_src = (EditText) findViewById(R.id.webpage_src);
                     //sendNotification(responseDetails, "");
-                    new JsonLoadingTask().execute(); //Async스레드를 시작
+                    new JsonLoadingTask1().execute(); //Async스레드를 시작
 
-                }
+                }*/
+
+            }
+        });
+
+        Button2.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new JsonLoadingTask2().execute(); //Async스레드를 시작
+
+
+            }
+        });
+
+        Button3.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                new JsonLoadingTask3().execute(); //Async스레드를 시작
 
             }
         });
@@ -157,14 +178,26 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public String getJsonText() {
+    public String getJsonText(int chk) {
 
         StringBuffer sb = new StringBuffer();
         try {
 
             //주어진 URL 문서의 내용을 문자열로 얻는다.
-
-            String jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
+            switch (chk) {
+                case 1:
+                    jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
+                    break;
+                case 2:
+                    jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
+                    break;
+                case 3:
+                    jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
+                    break;
+                default:
+                    jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
+            }
+            //String jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
 
            JSONObject obj = new JSONObject(jsonPage); //
             JSONArray List = obj.getJSONArray("List");
@@ -193,11 +226,37 @@ public class MainActivity extends AppCompatActivity {
         return sb.toString();
     }//getJsonText()----------
 
-    private class JsonLoadingTask extends AsyncTask<String, Void, String> {
+    private class JsonLoadingTask1 extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strs) {
 
-            return getJsonText();
+            return getJsonText(1);
+
+        } // doInBackground : 백그라운드 작업을 진행한다.
+        @Override
+        protected void onPostExecute(String result) {
+            // et_webpage_src.setText(result);
+        } // onPostExecute : 백그라운드 작업이 끝난 후 UI 작업을 진행한다.
+    } // JsonLoadingTask
+
+    private class JsonLoadingTask2 extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strs) {
+
+            return getJsonText(2);
+
+        } // doInBackground : 백그라운드 작업을 진행한다.
+        @Override
+        protected void onPostExecute(String result) {
+            // et_webpage_src.setText(result);
+        } // onPostExecute : 백그라운드 작업이 끝난 후 UI 작업을 진행한다.
+    } // JsonLoadingTask
+
+    private class JsonLoadingTask3 extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strs) {
+
+            return getJsonText(3);
 
         } // doInBackground : 백그라운드 작업을 진행한다.
         @Override
