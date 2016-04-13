@@ -56,12 +56,16 @@ public class MainActivity extends AppCompatActivity {
     TextView textview;
     String result = "";
     String display = "";
-    ToggleButton Button1;
+    ToggleButton Button1,Button2,Button3;
     EditText et_webpage_src;
     NotificationManager mNotificationManager;
 
-    String responseDetails;
+    String FilePath;
     String Filename;
+    String Beacon;
+    String URL;
+
+    String jsonPage;
 
 
     @Override
@@ -78,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         TabHost.TabSpec spec = tabs.newTabSpec("tag1");
         spec.setContent(R.id.settings); // 탭내용에 어떤것이 들어갈것인지
-        spec.setIndicator("설정"); // 탭 버튼에 표시되는 텍스트 혹은 아이콘도 가능
+        spec.setIndicator("홈"); // 탭 버튼에 표시되는 텍스트 혹은 아이콘도 가능
         tabs.addTab(spec);
         spec = tabs.newTabSpec("tag2");
         spec.setContent(R.id.back);
@@ -98,12 +102,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         Button1=  (ToggleButton)findViewById(R.id.Btn1);
+        Button2=  (ToggleButton)findViewById(R.id.Btn2);
+        Button3=  (ToggleButton)findViewById(R.id.Btn3);
+
         Button1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-                if (Button1.isChecked()) {
+                //new JsonLoadingTask().execute(); //Async스레드를 시작
+               if (Button1.isChecked()) {
 
                     //et_webpage_src = (EditText) findViewById(R.id.webpage_src);
                     //sendNotification(responseDetails, "");
@@ -113,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
 
     }
     private void sendNotification(String Title,String message) {  //알림패널에 나타나게하는 코드
@@ -138,11 +147,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void sendCenterPush(String pw,String name) {
-        sendNotification(pw, name);
+    public void sendCenterPush(String FilePath, String Beacon,String Filename, String URL) {
+        //sendNotification(Beacon, Filename,url);
         Intent intent = new Intent(getApplicationContext(), DialogActivity.class);
-        intent.putExtra("PW",pw);
-        intent.putExtra("NAME",name);
+        intent.putExtra("FilePath", FilePath);
+        intent.putExtra("Beacon", Beacon);
+        intent.putExtra("Filename",Filename);
+        intent.putExtra("URL",URL);
         startActivity(intent);
     }
 
@@ -151,77 +162,29 @@ public class MainActivity extends AppCompatActivity {
         StringBuffer sb = new StringBuffer();
         try {
 
-           /* //주어진 URL 문서의 내용을 문자열로 얻는다.
-            String jsonPage = getStringFromUrl("http://ajax.googleapis.com/ajax/services/search/images?");
+            //주어진 URL 문서의 내용을 문자열로 얻는다.
 
-            //읽어들인 JSON포맷의 데이터를 JSON객체로 변환
-            JSONObject json = new JSONObject(jsonPage);
-           // String responseData = (String) json.get("responseData");
-           responseDetails = (String) json.get("responseDetails");
-           // sendNotification("gigigi", responseDetails);
-            //String id = (String) json.get("id");
-
-           // sb.append("[ "+responseData+" ]\n");
-            sb.append(responseDetails + "\n");
-            sb.append("\n");
-
-            //sendNotification("gggg", responseDetails);
-            sendCenterPush("gggg", responseDetails);*/
-
-             //주어진 URL 문서의 내용을 문자열로 얻는다.
             String jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
 
-            JSONObject obj = new JSONObject(jsonPage); //
+           JSONObject obj = new JSONObject(jsonPage); //
             JSONArray List = obj.getJSONArray("List");
 
             JSONObject info = List.getJSONObject(0);
+            FilePath = info.getString("FilePath");
+            Beacon = info.getString("Beacon");
             Filename = info.getString("Filename");
+            URL = info.getString("URL");
 
 
-
-    // sb.append("[ "+responseData+" ]\n");
+            // sb.append("[ "+responseData+" ]\n");
+            sb.append(FilePath + "\n");
+            sb.append(Beacon + "\n");
             sb.append(Filename + "\n");
+            sb.append(URL + "\n");
             sb.append("\n");
 
             //sendNotification("gggg", responseDetails);
-            sendCenterPush(Filename, Filename);
-
-
-
-
-            /*String pw = (String) json.get("pw");
-            String name = (String) json.get("name");
-            String id = (String) json.get("id");
-
-
-
-            sb.append("[ "+pw+" ]\n");
-            sb.append(name+"\n");
-            sb.append(id+"\n");
-            sb.append("\n");
-
-            sendCenterPush(pw, name);*/
-
-
-           /* //ksk_list의 값은 배열로 구성 되어있으므로 JSON 배열생성
-            JSONArray jArr = json.getJSONArray("ksk_list");
-
-            //배열의 크기만큼 반복하면서, ksNo과 korName의 값을 추출함
-            for (int i=0; i<jArr.length(); i++){
-
-                //i번째 배열 할당
-                json = jArr.getJSONObject(i);
-
-                //ksNo,korName의 값을 추출함
-                String ksNo = json.getString("ksNo");
-                String korName = json.getString("korName");
-                System.out.println("ksNo:"+ksNo+"/korName:"+korName);
-
-                //StringBuffer 출력할 값을 저장
-                sb.append("[ "+ksNo+" ]\n");
-                sb.append(korName+"\n");
-                sb.append("\n");
-            }*/
+            sendCenterPush(FilePath,Beacon, Filename,URL);
 
         } catch (Exception e) {
             // TODO: handle exception
@@ -233,14 +196,17 @@ public class MainActivity extends AppCompatActivity {
     private class JsonLoadingTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strs) {
+
             return getJsonText();
+
         } // doInBackground : 백그라운드 작업을 진행한다.
         @Override
         protected void onPostExecute(String result) {
-           // et_webpage_src.setText(result);
+            // et_webpage_src.setText(result);
         } // onPostExecute : 백그라운드 작업이 끝난 후 UI 작업을 진행한다.
     } // JsonLoadingTask
     // getStringFromUrl : 주어진 URL의 문서의 내용을 문자열로 반환
+
     public String getStringFromUrl(String pUrl){
 
         BufferedReader bufreader=null;

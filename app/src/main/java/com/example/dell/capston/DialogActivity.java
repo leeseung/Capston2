@@ -19,7 +19,8 @@ public class DialogActivity extends Activity implements
         OnClickListener {
 
     private Button mConfirm, mCancel;
-    private TextView titleview;
+    private TextView titleview,titleview1,titleview2,titleview3;
+
     private AQuery aq;
     private ImageView img;
 
@@ -31,13 +32,24 @@ public class DialogActivity extends Activity implements
         aq = new AQuery( this );
 
         Intent intent = getIntent();
-        String pw = intent.getStringExtra("PW");
-        String name = intent.getStringExtra("NAME");
-        titleview = (TextView) findViewById(R.id.TitleView);
-        img = (ImageView) findViewById(R.id.ImageView);
+        String FilePath = intent.getStringExtra("FilePath");
+        String Beacon = intent.getStringExtra("Beacon");
+        String Filename = intent.getStringExtra("Filename");
+        String URL = intent.getStringExtra("URL");
 
-        titleview.setText(pw);
-        aq.id( img ).image("http://image.slidesharecdn.com/androidstudio-130904110409-/95/android-studio-1-638.jpg?cb=1378292683");
+        titleview = (TextView) findViewById(R.id.TitleView);
+        titleview1 = (TextView) findViewById(R.id.TitleView1);
+        titleview2 = (TextView) findViewById(R.id.TitleView2);
+        titleview3 = (TextView) findViewById(R.id.TitleView3);
+
+
+        //img = (ImageView) findViewById(R.id.ImageView);
+        titleview.setText("파일경로 = " + FilePath);
+        titleview1.setText("비콘번호 = " + Beacon);
+        titleview2.setText("파일이름 = " + Filename);
+        titleview3.setText("주소 = " + URL);
+
+        //aq.id( img ).image("http://image.slidesharecdn.com/androidstudio-130904110409-/95/android-studio-1-638.jpg?cb=1378292683");
 
         setContent();
     }
@@ -65,3 +77,4 @@ public class DialogActivity extends Activity implements
         }
     }
 }
+
