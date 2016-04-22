@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -44,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import static android.view.View.*;
@@ -56,16 +59,19 @@ public class MainActivity extends AppCompatActivity {
     TextView textview;
     String result = "";
     String display = "";
-    Button Button1,Button2,Button3;
+    Button Button1,Button2,Button3,Button4;
     EditText et_webpage_src;
     NotificationManager mNotificationManager;
 
-    String FilePath;
-    String Filename;
-    String Beacon;
+    String image_URL;
     String URL;
 
     String jsonPage;
+
+
+    String responseDetails;
+    String responseData;
+    String responseStatus;
 
 
     @Override
@@ -104,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         Button1=  (Button)findViewById(R.id.Btn1);
         Button2=  (Button)findViewById(R.id.Btn2);
         Button3=  (Button)findViewById(R.id.Btn3);
+        Button4=  (Button)findViewById(R.id.Btn4);
 
         Button1.setOnClickListener(new OnClickListener() {
             @Override
@@ -141,6 +148,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        Button4.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                new JsonLoadingTask4().execute(); //Async스레드를 시작
+
+            }
+        });
 
 
 
@@ -168,15 +184,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void sendCenterPush(String FilePath, String Beacon,String Filename, String URL) {
-        //sendNotification(Beacon, Filename,url);
+   public void sendCenterPush(String URL,  String image_URL) {
+        sendNotification(URL,image_URL);
         Intent intent = new Intent(getApplicationContext(), DialogActivity.class);
-        intent.putExtra("FilePath", FilePath);
-        intent.putExtra("Beacon", Beacon);
-        intent.putExtra("Filename",Filename);
-        intent.putExtra("URL",URL);
+        intent.putExtra("image_URL", image_URL);
+       intent.putExtra("URL",URL);
         startActivity(intent);
     }
+
 
     public String getJsonText(int chk) {
 
@@ -189,13 +204,17 @@ public class MainActivity extends AppCompatActivity {
                     jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
                     break;
                 case 2:
-                    jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
+                    jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=2");
                     break;
                 case 3:
-                    jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
+                    jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=3");
+                    break;
+                case 4:
+                    jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=4");
                     break;
                 default:
-                    jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
+                    //에러
+                    //jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
             }
             //String jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
 
@@ -203,21 +222,23 @@ public class MainActivity extends AppCompatActivity {
             JSONArray List = obj.getJSONArray("List");
 
             JSONObject info = List.getJSONObject(0);
-            FilePath = info.getString("FilePath");
-            Beacon = info.getString("Beacon");
-            Filename = info.getString("Filename");
+            image_URL = info.getString("image_URL");
+            //Beacon = info.getString("Beacon");
+           // Filename = info.getString("Filename");
             URL = info.getString("URL");
 
 
             // sb.append("[ "+responseData+" ]\n");
-            sb.append(FilePath + "\n");
-            sb.append(Beacon + "\n");
-            sb.append(Filename + "\n");
+            sb.append(image_URL + "\n");
+           // sb.append(Beacon + "\n");
+           // sb.append(Filename + "\n");
             sb.append(URL + "\n");
             sb.append("\n");
 
             //sendNotification("gggg", responseDetails);
-            sendCenterPush(FilePath,Beacon, Filename,URL);
+            sendCenterPush(URL,image_URL);
+
+
 
         } catch (Exception e) {
             // TODO: handle exception
@@ -257,6 +278,18 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... strs) {
 
             return getJsonText(3);
+
+        } // doInBackground : 백그라운드 작업을 진행한다.
+        @Override
+        protected void onPostExecute(String result) {
+            // et_webpage_src.setText(result);
+        } // onPostExecute : 백그라운드 작업이 끝난 후 UI 작업을 진행한다.
+    } // JsonLoadingTask
+    private class JsonLoadingTask4 extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strs) {
+
+            return getJsonText(4);
 
         } // doInBackground : 백그라운드 작업을 진행한다.
         @Override
@@ -311,5 +344,11 @@ public class MainActivity extends AppCompatActivity {
 
         return page.toString();
     }// getStringFromUrl()-------------------------
+
+    /**
+     * Created by lee on 2016-04-14.
+     */
+
+
 
 }

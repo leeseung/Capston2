@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Capston3.iml" filepath="$PROJECT_DIR$/Capston3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Beacon_Push.iml" filepath="$PROJECT_DIR$/Beacon_Push.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
