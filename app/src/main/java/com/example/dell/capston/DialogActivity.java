@@ -34,17 +34,13 @@ public class DialogActivity extends Activity implements
 
     private  ImageView imageView;
 
-    private AQuery aq;
-    private ImageView img;
 
-    private BitMap b;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.push);
-        aq = new AQuery( this );
-        b = new BitMap();
+
         Intent intent = getIntent();
         String image_URL = intent.getStringExtra("image_URL");
         //String Beacon = intent.getStringExtra("Beacon");
@@ -52,21 +48,10 @@ public class DialogActivity extends Activity implements
         String URL = intent.getStringExtra("URL");
 
         titleview = (TextView) findViewById(R.id.titleView);
-        img = (ImageView)findViewById(R.id.imageView);
+        imageView = (ImageView)findViewById(R.id.imageView);
 
-
-
-        //img = (ImageView) findViewById(R.id.ImageView);
-        //titleview.setText("파일경로 = " + FilePath);
-       // titleview1.setText("비콘번호 = " + Beacon);
-       // titleview2.setText("파일이름 = " + Filename);
-       //titleview.setImageBitmap(b.getBitURL("http://image.slidesharecdn.com/androidstudio-130904110409-/95/android-studio-1-638.jpg?cb=1378292683"));
         titleview.setText(URL);
         Glide.with(this).load(image_URL).into(imageView);
-        //aq.id( titleview ).image(FilePath);
-
-
-
         setContent();
     }
 
