@@ -32,7 +32,7 @@ public class DialogActivity extends Activity implements
     private Button mConfirm, mCancel;
     private TextView titleview;
 
-    private  ImageView imageView;
+    private ImageView imageView;
 
 
     @Override
@@ -44,11 +44,11 @@ public class DialogActivity extends Activity implements
         Intent intent = getIntent();
         String image_URL = intent.getStringExtra("image_URL");
         //String Beacon = intent.getStringExtra("Beacon");
-       // String Filename = intent.getStringExtra("Filename");
+        // String Filename = intent.getStringExtra("Filename");
         String URL = intent.getStringExtra("URL");
 
         titleview = (TextView) findViewById(R.id.titleView);
-        imageView = (ImageView)findViewById(R.id.imageView);
+        imageView = (ImageView) findViewById(R.id.imageView);
 
         titleview.setText(URL);
         Glide.with(this).load(image_URL).into(imageView);
@@ -77,27 +77,6 @@ public class DialogActivity extends Activity implements
                 break;
         }
     }
-    public class BitMap {
-        public Bitmap getBitURL(String src){
-            HttpURLConnection connection = null;
-            try {
-                URL url = new URL(src);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                return myBitmap;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } finally {
-                if (connection != null) connection.disconnect();
-            }
-        }
-    }
-
-
 
 }
 

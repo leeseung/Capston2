@@ -11,6 +11,8 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Message;
+import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +39,12 @@ import android.widget.Button;
 
 import com.androidquery.AQuery;
 
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.RangeNotifier;
+import org.altbeacon.beacon.Region;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -48,14 +56,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static android.view.View.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     EditText url;
     Button btn;
     String txt;
-    Handler handler = new Handler();
+    //Handler handler = new Handler();
     TextView textview;
     String result = "";
     String display = "";
@@ -68,10 +79,17 @@ public class MainActivity extends AppCompatActivity {
 
     String jsonPage;
 
+    String Majorid;
+    String Minorid;
 
-    String responseDetails;
-    String responseData;
-    String responseStatus;
+
+    private BeaconManager beaconManager;
+
+
+    protected String proximityUuid;
+    // 감지된 비콘들을 임시로 담을 리스트
+    private List<Beacon> beaconList = new ArrayList<>();
+
 
 
     @Override
@@ -97,6 +115,17 @@ public class MainActivity extends AppCompatActivity {
 
         tabs.setCurrentTab(0); // 기본설정탭이 0번 인덱스 탭
 
+        // 실제로 비콘을 탐지하기 위한 비콘매니저 객체를 초기화
+        beaconManager = BeaconManager.getInstanceForApplication(this);
+        //extView = (TextView)findViewById(R.id.Textview);
+
+        // 여기가 중요한데, 기기에 따라서 setBeaconLayout 안의 내용을 바꿔줘야 하는듯 싶다.
+        // 필자의 경우에는 아래처럼 하니 잘 동작했음.
+        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
+
+        // 비콘 탐지를 시작한다. 실제로는 서비스를 시작하는것.
+        beaconManager.bind(this);
+
         url = (EditText) findViewById(R.id.url);
         btn = (Button) findViewById(R.id.connect);
         btn.setOnClickListener(new OnClickListener() {
@@ -118,7 +147,8 @@ public class MainActivity extends AppCompatActivity {
 
                 new JsonLoadingTask1().execute(); //Async스레드를 시작
 
-              /* if (Button1.isChecked()) {
+
+             /* if (Button1.isChecked()) {
 
                     //et_webpage_src = (EditText) findViewById(R.id.webpage_src);
                     //sendNotification(responseDetails, "");
@@ -158,9 +188,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+}
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        beaconManager.unbind(this);
     }
+
+    Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            //textView.setText("");
+
+            // 비콘의 아이디와 거리를 측정하여 textView에 넣는다.
+            for(Beacon beacon : beaconList){
+
+                Majorid=beacon.getId2().toString();
+                Minorid=beacon.getId3().toString();
+
+                if(Majorid.equals("4660") && Minorid.equals("64001")) {
+                    //textView.append("1번 ID : " + beacon.getId2() + " 2번 ID : " + beacon.getId3() + " / " + "Distance : " + Double.parseDouble(String.format("%.3f", beacon.getDistance())) + "m\n");
+                    new JsonLoadingTask1().execute();
+                }
+
+            }
+
+
+            // 자기 자신을 1초마다 호출
+            //handler.sendEmptyMessageDelayed(0, 1000);
+        }
+    };
+
+
     private void sendNotification(String Title,String message) {  //알림패널에 나타나게하는 코드
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -246,6 +306,29 @@ public class MainActivity extends AppCompatActivity {
 
         return sb.toString();
     }//getJsonText()----------
+
+    @Override
+    public void onBeaconServiceConnect() {
+        beaconManager.setRangeNotifier(new RangeNotifier() {
+            @Override
+            // 비콘이 감지되면 해당 함수가 호출된다. Collection<Beacon> beacons에는 감지된 비콘의 리스트가,
+            // region에는 비콘들에 대응하는 Region 객체가 들어온다.
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                if (beacons.size() > 0) {
+                    beaconList.clear();
+                    for (Beacon beacon : beacons) {
+                        beaconList.add(beacon);
+                    }
+                    handler.sendEmptyMessage(1000);
+                }
+            }
+
+        });
+
+        try {
+            beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
+        } catch (RemoteException e) {   }
+    }
 
     private class JsonLoadingTask1 extends AsyncTask<String, Void, String> {
         @Override
