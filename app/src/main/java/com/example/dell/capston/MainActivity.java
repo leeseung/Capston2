@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     String Majorid;
     String Minorid;
 
+    int count=0;
+
 
     private BeaconManager beaconManager;
 
@@ -213,10 +215,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 }
 
             }
+            if(count==1) {
+                //handler.removeMessages(0);
+                // 자기 자신을 1초마다 호출
+                //handler.sendEmptyMessageDelayed(0, 1000);
 
-
-            // 자기 자신을 1초마다 호출
-            //handler.sendEmptyMessageDelayed(0, 1000);
+            }
         }
     };
 
@@ -241,15 +245,19 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 
+        Intent intent1 = new Intent(getApplicationContext(), DialogActivity.class);
+        intent1.putExtra("image_URL", image_URL);
+        intent1.putExtra("URL",URL);
+        startActivity(intent1);
 
     }
 
    public void sendCenterPush(String URL,  String image_URL) {
-        sendNotification(URL,image_URL);
-        Intent intent = new Intent(getApplicationContext(), DialogActivity.class);
+        sendNotification(URL, image_URL);
+        /*Intent intent = new Intent(getApplicationContext(), DialogActivity.class);
         intent.putExtra("image_URL", image_URL);
        intent.putExtra("URL",URL);
-        startActivity(intent);
+        startActivity(intent);*/
     }
 
 
@@ -319,8 +327,14 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                     for (Beacon beacon : beacons) {
                         beaconList.add(beacon);
                     }
-                    handler.sendEmptyMessage(1000);
+                   // handler.sendEmptyMessage(0);
+
                 }
+                if(count==0){
+                    handler.sendEmptyMessage(0);
+                    count=1;
+                }
+
             }
 
         });
