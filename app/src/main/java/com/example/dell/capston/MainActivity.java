@@ -92,30 +92,14 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     // 감지된 비콘들을 임시로 담을 리스트
     private List<Beacon> beaconList = new ArrayList<>();
 
+   /* ArrayList<String> urlList  = new ArrayList<String>();
+    ArrayList<String> image_urlList  = new ArrayList<String>();*/
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        TabHost tabs = (TabHost) findViewById(R.id.tabhost);
-        tabs.setup();
-
-        //startActivity(new Intent(this, DialogActivity.class));
-
-        TabHost.TabSpec spec = tabs.newTabSpec("tag1");
-        spec.setContent(R.id.settings); // 탭내용에 어떤것이 들어갈것인지
-        spec.setIndicator("홈"); // 탭 버튼에 표시되는 텍스트 혹은 아이콘도 가능
-        tabs.addTab(spec);
-        spec = tabs.newTabSpec("tag2");
-        spec.setContent(R.id.back);
-        spec.setIndicator("뒤로가기");
-        tabs.addTab(spec);
-
-        tabs.setCurrentTab(0); // 기본설정탭이 0번 인덱스 탭
 
         // 실제로 비콘을 탐지하기 위한 비콘매니저 객체를 초기화
         beaconManager = BeaconManager.getInstanceForApplication(this);
@@ -127,68 +111,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
         // 비콘 탐지를 시작한다. 실제로는 서비스를 시작하는것.
         beaconManager.bind(this);
-
-        url = (EditText) findViewById(R.id.url);
-        btn = (Button) findViewById(R.id.connect);
-        btn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                txt = url.getText().toString();
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + txt));
-                startActivity(intent);
-            }
-        });
-        Button1=  (Button)findViewById(R.id.Btn1);
-        Button2=  (Button)findViewById(R.id.Btn2);
-        Button3=  (Button)findViewById(R.id.Btn3);
-        Button4=  (Button)findViewById(R.id.Btn4);
-
-        Button1.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                new JsonLoadingTask1().execute(); //Async스레드를 시작
-
-
-             /* if (Button1.isChecked()) {
-
-                    //et_webpage_src = (EditText) findViewById(R.id.webpage_src);
-                    //sendNotification(responseDetails, "");
-                    new JsonLoadingTask1().execute(); //Async스레드를 시작
-
-                }*/
-
-            }
-        });
-
-        Button2.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                new JsonLoadingTask2().execute(); //Async스레드를 시작
-
-
-            }
-        });
-
-        Button3.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                new JsonLoadingTask3().execute(); //Async스레드를 시작
-
-            }
-        });
-        Button4.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                new JsonLoadingTask4().execute(); //Async스레드를 시작
-
-            }
-        });
 
 }
 
@@ -216,16 +138,17 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
             }
             if(count==1) {
+
                 //handler.removeMessages(0);
                 // 자기 자신을 1초마다 호출
                 //handler.sendEmptyMessageDelayed(0, 1000);
-
             }
         }
     };
 
 
     private void sendNotification(String Title,String message) {  //알림패널에 나타나게하는 코드
+        //상단알림화면
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -245,10 +168,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 
-        Intent intent1 = new Intent(getApplicationContext(), DialogActivity.class);
+        // 푸쉬화면
+       /* Intent intent1 = new Intent(getApplicationContext(), DialogActivity.class);
         intent1.putExtra("image_URL", image_URL);
         intent1.putExtra("URL",URL);
-        startActivity(intent1);
+        startActivity(intent1);*/
 
     }
 
@@ -263,6 +187,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     public String getJsonText(int chk) {
 
+        ArrayList<String> urlList  = new ArrayList<String>();
+        ArrayList<String> image_urlList  = new ArrayList<String>();
         StringBuffer sb = new StringBuffer();
         try {
 
@@ -286,15 +212,19 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             }
             //String jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
 
+
+
            JSONObject obj = new JSONObject(jsonPage); //
             JSONArray List = obj.getJSONArray("List");
 
-            JSONObject info = List.getJSONObject(0);
-            image_URL = info.getString("image_URL");
-            //Beacon = info.getString("Beacon");
-           // Filename = info.getString("Filename");
-            URL = info.getString("URL");
+            for(int i=0;i<List.length();i++) {
+                JSONObject info = List.getJSONObject(i);
+                image_URL = info.getString("image_URL");
+                URL = info.getString("URL");
 
+                urlList.add(URL);
+                image_urlList.add(image_URL );
+            }
 
             // sb.append("[ "+responseData+" ]\n");
             sb.append(image_URL + "\n");
@@ -304,8 +234,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             sb.append("\n");
 
             //sendNotification("gggg", responseDetails);
-            sendCenterPush(URL,image_URL);
+            sendCenterPush("제목","내용");
 
+            Intent intent1 = new Intent(getApplicationContext(), DialogActivity.class);
+            intent1.putExtra("image_urlList", image_urlList);
+            intent1.putExtra("urlList", urlList);
+            startActivity(intent1);
 
 
         } catch (Exception e) {
@@ -327,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                     for (Beacon beacon : beacons) {
                         beaconList.add(beacon);
                     }
-                   // handler.sendEmptyMessage(0);
+                    // handler.sendEmptyMessage(0);
 
                 }
                 if(count==0){

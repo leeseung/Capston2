@@ -25,16 +25,21 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class DialogActivity extends Activity implements
         OnClickListener {
 
     private Button mConfirm, mCancel;
-    private TextView titleview;
+    private TextView titleview1,titleview2,titleview3;
 
-    private ImageView imageView;
+    private ImageView imageView1,imageView2,imageView3;
 
-
+    Bundle B = getIntent().getExtras();
+    /*ArrayList<String> image_urlList = B.getStringArrayList("image_urlList");
+    ArrayList<String> urlList = B.getStringArrayList("urlList");*/
+    ArrayList<String> urlList  = new ArrayList<String>();
+    ArrayList<String> image_urlList  = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,16 +47,33 @@ public class DialogActivity extends Activity implements
         setContentView(R.layout.push);
 
         Intent intent = getIntent();
-        String image_URL = intent.getStringExtra("image_URL");
+
+
+        titleview1 = (TextView) findViewById(R.id.titleView1);
+        imageView1 = (ImageView) findViewById(R.id.imageView1);
+
+        titleview2 = (TextView) findViewById(R.id.titleView2);
+        imageView2 = (ImageView) findViewById(R.id.imageView2);
+
+        titleview3 = (TextView) findViewById(R.id.titleView3);
+        imageView3 = (ImageView) findViewById(R.id.imageView3);
+
+
+        /*String image_URL = intent.getStringExtra("image_URL");
         //String Beacon = intent.getStringExtra("Beacon");
         // String Filename = intent.getStringExtra("Filename");
-        String URL = intent.getStringExtra("URL");
+        String URL = intent.getStringExtra("URL");*/
 
-        titleview = (TextView) findViewById(R.id.titleView);
-        imageView = (ImageView) findViewById(R.id.imageView);
+        image_urlList = (ArrayList<String>) B
+                .get("image_urlList");
 
-        titleview.setText(URL);
-        Glide.with(this).load(image_URL).into(imageView);
+        urlList = (ArrayList<String>) B
+                .get("urlList");
+
+
+        titleview1.setText(urlList.get(0));
+        Glide.with(this).load(image_urlList.get(0)).into(imageView1);
+
         setContent();
     }
 
