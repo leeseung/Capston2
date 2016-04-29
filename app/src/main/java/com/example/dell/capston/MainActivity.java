@@ -130,11 +130,25 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
                 Majorid=beacon.getId2().toString();
                 Minorid=beacon.getId3().toString();
-
+                //1번비콘
                 if(Majorid.equals("4660") && Minorid.equals("64001")) {
                     //textView.append("1번 ID : " + beacon.getId2() + " 2번 ID : " + beacon.getId3() + " / " + "Distance : " + Double.parseDouble(String.format("%.3f", beacon.getDistance())) + "m\n");
                     new JsonLoadingTask1().execute();
                 }
+                //2번비콘
+                else if(Majorid.equals("4660") && Minorid.equals("64001")) {
+                    //textView.append("1번 ID : " + beacon.getId2() + " 2번 ID : " + beacon.getId3() + " / " + "Distance : " + Double.parseDouble(String.format("%.3f", beacon.getDistance())) + "m\n");
+                    new JsonLoadingTask2().execute();
+                }
+                //3번비콘
+                else if(Majorid.equals("4660") && Minorid.equals("64001")) {
+                    //textView.append("1번 ID : " + beacon.getId2() + " 2번 ID : " + beacon.getId3() + " / " + "Distance : " + Double.parseDouble(String.format("%.3f", beacon.getDistance())) + "m\n");
+                    new JsonLoadingTask3().execute();
+                }
+
+
+
+
 
             }
             if(count==1) {
@@ -192,10 +206,13 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         StringBuffer sb = new StringBuffer();
         try {
 
-            //주어진 URL 문서의 내용을 문자열로 얻는다.
+            String chkString = String.valueOf(chk);
+
+            jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=" + chkString);
+            /*//주어진 URL 문서의 내용을 문자열로 얻는다.
             switch (chk) {
                 case 1:
-                    jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
+                    jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=" + chkString);
                     break;
                 case 2:
                     jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=2");
@@ -209,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 default:
                     //에러
                     //jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
-            }
+            }*/
             //String jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
 
 
