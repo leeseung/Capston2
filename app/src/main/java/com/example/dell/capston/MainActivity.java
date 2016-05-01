@@ -1,12 +1,9 @@
 package com.example.dell.capston;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,30 +11,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.Button;
-
-
-import com.androidquery.AQuery;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -47,20 +28,16 @@ import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import static android.view.View.*;
 
 public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     EditText url;
@@ -84,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     int count=0;
 
+    WebView web1,web2,web3;
+
 
     private BeaconManager beaconManager;
 
@@ -101,6 +80,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        // web2.loadUrl("http://220.67.224.205/domianweb/roomview5.asp?room_no=2");
+       // web3.loadUrl("http://220.67.224.205/domianweb/roomview5.asp?room_no=4");
+
+
         // 실제로 비콘을 탐지하기 위한 비콘매니저 객체를 초기화
         beaconManager = BeaconManager.getInstanceForApplication(this);
         //extView = (TextView)findViewById(R.id.Textview);
@@ -111,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
         // 비콘 탐지를 시작한다. 실제로는 서비스를 시작하는것.
         beaconManager.bind(this);
-
+        new JsonLoadingTask2().execute();
 }
 
 
@@ -133,9 +117,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 //1번비콘
                 if(Majorid.equals("4660") && Minorid.equals("64001")) {
                     //textView.append("1번 ID : " + beacon.getId2() + " 2번 ID : " + beacon.getId3() + " / " + "Distance : " + Double.parseDouble(String.format("%.3f", beacon.getDistance())) + "m\n");
+
                     new JsonLoadingTask1().execute();
                 }
-                //2번비콘
+                //2번비콘 ( 도서관 관련 )
+
                 else if(Majorid.equals("4660") && Minorid.equals("64001")) {
                     //textView.append("1번 ID : " + beacon.getId2() + " 2번 ID : " + beacon.getId3() + " / " + "Distance : " + Double.parseDouble(String.format("%.3f", beacon.getDistance())) + "m\n");
                     new JsonLoadingTask2().execute();
@@ -183,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 
         // 푸쉬화면
-       /* Intent intent1 = new Intent(getApplicationContext(), DialogActivity.class);
+       /* Intent intent1 = new Intent(getApplicationContext(), PosterActivity.class);
         intent1.putExtra("image_URL", image_URL);
         intent1.putExtra("URL",URL);
         startActivity(intent1);*/
@@ -192,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
    public void sendCenterPush(String URL,  String image_URL) {
         sendNotification(URL, image_URL);
-        /*Intent intent = new Intent(getApplicationContext(), DialogActivity.class);
+        /*Intent intent = new Intent(getApplicationContext(), PosterActivity.class);
         intent.putExtra("image_URL", image_URL);
        intent.putExtra("URL",URL);
         startActivity(intent);*/
@@ -209,6 +195,10 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             String chkString = String.valueOf(chk);
 
             jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=" + chkString);
+
+
+
+
             /*//주어진 URL 문서의 내용을 문자열로 얻는다.
             switch (chk) {
                 case 1:
@@ -230,33 +220,45 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             //String jsonPage = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
 
 
+            if(chk ==1 ) {
+                JSONObject obj = new JSONObject(jsonPage); //
+                JSONArray List = obj.getJSONArray("List");
 
-           JSONObject obj = new JSONObject(jsonPage); //
-            JSONArray List = obj.getJSONArray("List");
+                for (int i = 0; i < List.length(); i++) {
+                    JSONObject info = List.getJSONObject(i);
+                    image_URL = info.getString("image_URL");
+                    URL = info.getString("URL");
 
-            for(int i=0;i<List.length();i++) {
-                JSONObject info = List.getJSONObject(i);
-                image_URL = info.getString("image_URL");
-                URL = info.getString("URL");
+                    urlList.add(URL);
+                    image_urlList.add(image_URL);
+                }
 
-                urlList.add(URL);
-                image_urlList.add(image_URL );
+                // sb.append("[ "+responseData+" ]\n");
+                sb.append(image_URL + "\n");
+                // sb.append(Beacon + "\n");
+                // sb.append(Filename + "\n");
+                sb.append(URL + "\n");
+                sb.append("\n");
+
+                //sendNotification("gggg", responseDetails);
+                sendCenterPush("제목", "내용");
+
+                Intent intent1 = new Intent(getApplicationContext(), PosterActivity.class);
+                intent1.putExtra("image_urlList", image_urlList);
+                intent1.putExtra("urlList", urlList);
+                startActivity(intent1);
+            }
+            else if(chk ==2 ){
+                sendCenterPush("Push", "도서관 좌석정보");
+
+                Intent intent1 = new Intent(getApplicationContext(), PosterActivity.class);
+                intent1.putExtra("image_urlList", image_urlList);
+                intent1.putExtra("urlList", urlList);
+                startActivity(intent1);
+
+
             }
 
-            // sb.append("[ "+responseData+" ]\n");
-            sb.append(image_URL + "\n");
-           // sb.append(Beacon + "\n");
-           // sb.append(Filename + "\n");
-            sb.append(URL + "\n");
-            sb.append("\n");
-
-            //sendNotification("gggg", responseDetails);
-            sendCenterPush("제목","내용");
-
-            Intent intent1 = new Intent(getApplicationContext(), DialogActivity.class);
-            intent1.putExtra("image_urlList", image_urlList);
-            intent1.putExtra("urlList", urlList);
-            startActivity(intent1);
 
 
         } catch (Exception e) {
