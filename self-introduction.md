@@ -40,7 +40,7 @@
  
  #### 3. 프로젝트 화면
 
-![Alt text](/path/to/img.jpg)
+![Alt text](http://imagesearch.naver.com/search.naver?sm=ext&viewloc=1&where=idetail&rev=31&query=%EC%95%84%EB%91%90%EC%9D%B4%EB%85%B8%20%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4%EB%AA%A8%EB%93%88&section=image&res_fr=0&res_to=0&ie=utf8&face=0&color=0&ccl=0&aq=0&spq=0&nx_search_query=%EC%95%84%EB%91%90%EC%9D%B4%EB%85%B8%20%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4%EB%AA%A8%EB%93%88&nx_and_query=&nx_sub_query=&nx_search_hlquery=&nx_search_fasquery=&datetype=0&startdate=0&enddate=0&start=238&img_id=cafe17467872%7C146%7C55512_75)
 
 
 
