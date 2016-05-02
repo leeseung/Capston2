@@ -27,14 +27,14 @@
 
 ### 2. 프로젝트 구성
 
-  * 모바일 어플리케이션
+  * __모바일 어플리케이션__
     + Android Studio를 이용한 앱 개발
 
-  + 서버 구축
+  + __서버 구축__
     + Jsp,Servlet를 이용하여 구축
  
 
-  + 사용하는 Hardware 
+  + __사용하는 Hardware__ 
     + Arduino모듈 (Uno r3) 와 블루투스 모듈 (Hm-10)을 이용한 IBeacon 
  
  
