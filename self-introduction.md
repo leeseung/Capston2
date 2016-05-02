@@ -5,16 +5,18 @@
 
 2017.2월 한성대학교 컴퓨터공학부 졸업 예정
 
+
 ##### 세부 전공 기술(Major)
 
+* Java GUI 프로그램 개발  
+  * Thread를 이용한 블록게임 구현 
 
 * 모바일 프로그래밍
-  * Android,Java를 이용한 앱 개발
+  * Java를 이용한 Android 앱 개발 
 
 * 서버 개발
-  * Jsp,Servlet,Mysql를 이용
-
-
+  * Jsp,Servlet,Apach Tomcat를 이용하여 웹서버 구축
+  * Mysql을 이용한 DB 구축
 
 ### **2. 진행중인 프로젝트**
 
