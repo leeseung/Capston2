@@ -13,6 +13,7 @@
 
 * 모바일 프로그래밍
   * Java를 이용한 Android 앱 개발 
+  * Open source 이용
 
 * 서버 개발
   * Jsp,Servlet,Apach Tomcat를 이용하여 웹서버 구축
@@ -42,6 +43,12 @@
 
 ![Alt text](http://cfile1.uf.tistory.com/image/22020D5053AD90CB0434CA)
   [아두이노 + 블루투스 모듈]
+ 
+ 
+#### 3. 인턴 및 프로젝트 수행 실적(Experience)
+*  2017 (주) 마이꿈 인턴(안드로이드 개발, 멀티미디어 컨텐츠 제작)예정
+
+
 
 
 ####연락처
