@@ -34,7 +34,7 @@
     + Android Studio를 이용한 앱 개발
 
   + __서버 구축__
-    + Jsp,Servlet를 이용하여 구축
+    + Jsp,Servlet,Apach Tomcat를 이용하여 구축
  
 
   + __사용하는 Hardware__ 
