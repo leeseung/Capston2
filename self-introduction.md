@@ -37,11 +37,9 @@
 
   + __사용하는 Hardware__ 
     + Arduino모듈 (Uno r3) 와 블루투스 모듈 (Hm-10)을 이용한 IBeacon 
- 
- #### 3. 프로젝트 화면
 
 ![Alt text](http://cfile1.uf.tistory.com/image/22020D5053AD90CB0434CA)
-
+  [아두이노 + 블루투스 모듈]
 
 
 ####연락처
