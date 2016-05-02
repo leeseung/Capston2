@@ -11,7 +11,7 @@
 * 모바일 프로그래밍
   * Android,Java를 이용한 앱 개발
 
-* 서버 구축
+* 서버 개발
   * Jsp,Servlet,Mysql를 이용
 
 
@@ -44,4 +44,4 @@
 
 ####연락처
 Gihub: [https://github.com/leeseung](https://github.com/leeseung)
-email: dwdw201@naver.com
+  email: dwdw201@naver.com
