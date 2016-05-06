@@ -1,26 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.dell.capston" >
+    package="com.example.dell.capston"
+    android:versionCode="3"
+    android:versionName="1.1.1" >
+
+
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:name="com.example.dell.capston.MainActivity"
+            android:label="@string/app_name"
+             >
+        </activity>
+        <activity
+            android:name="com.example.dell.capston.TestMainActivity"
+            android:label="@string/app_name"
+            >
+        </activity>
+
+        <activity
+            android:name="com.example.dell.capston.IntroActivity"
+            android:label="@string/app_name"
+            android:configChanges="keyboardHidden|orientation|screenSize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".PosterActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Dialog">
-        </activity>
+
+        <!-- Service -->
+        <service
+            android:name= "com.example.dell.capston.service.BlueWaveService"
+            android:icon="@drawable/ic_launcher"
+            android:label= "@string/service_name"
+            android:configChanges="keyboardHidden|orientation|screenSize" >
+        </service>
+
+
+        <receiver android:name="com.example.dell.capston.service.ServiceMonitoring$ServiceMonitoringBR" />
+
+        <receiver
+            android:name="com.example.dell.capston.service.BootReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>

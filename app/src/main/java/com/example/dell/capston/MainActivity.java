@@ -40,16 +40,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BeaconConsumer {
-    EditText url;
-    Button btn;
-    String txt;
-    //Handler handler = new Handler();
-    TextView textview;
-    String result = "";
-    String display = "";
-    Button Button1,Button2,Button3,Button4;
-    EditText et_webpage_src;
-    NotificationManager mNotificationManager;
+    private static final String TAG = "MainActivity";
+
+    // Constants
+    private static final int EXIT_RETRY_TIME_THRESHOLD = 3*1000;
+
+    // Context, System
+    private Context mContext;
+
 
     String image_URL;
     String URL;
@@ -80,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent intent = getIntent();
+
 
         // web2.loadUrl("http://220.67.224.205/domianweb/roomview5.asp?room_no=2");
        // web3.loadUrl("http://220.67.224.205/domianweb/roomview5.asp?room_no=4");
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
         // 비콘 탐지를 시작한다. 실제로는 서비스를 시작하는것.
         beaconManager.bind(this);
-        new JsonLoadingTask2().execute();
+
 }
 
 
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     private void sendNotification(String Title,String message) {  //알림패널에 나타나게하는 코드
         //상단알림화면
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, IntroActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -229,8 +229,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                     image_URL = info.getString("image_URL");
                     URL = info.getString("URL");
 
-                    urlList.add(URL);
-                    image_urlList.add(image_URL);
+                    /*urlList.add(URL);
+                    image_urlList.add(image_URL);*/
                 }
 
                 // sb.append("[ "+responseData+" ]\n");
@@ -244,8 +244,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 sendCenterPush("제목", "내용");
 
                 Intent intent1 = new Intent(getApplicationContext(), PosterActivity.class);
-                intent1.putExtra("image_urlList", image_urlList);
-                intent1.putExtra("urlList", urlList);
+                intent1.putExtra("image_urlList", image_URL);
+                intent1.putExtra("urlList", URL);
                 startActivity(intent1);
             }
             else if(chk ==2 ){
