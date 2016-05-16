@@ -15,9 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 
 import org.altbeacon.beacon.Beacon;
@@ -118,18 +115,18 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 if(Majorid.equals("4660") && Minorid.equals("64001")) {
                     //textView.append("1번 ID : " + beacon.getId2() + " 2번 ID : " + beacon.getId3() + " / " + "Distance : " + Double.parseDouble(String.format("%.3f", beacon.getDistance())) + "m\n");
 
-                    new JsonLoadingTask1().execute();
+                    //new JsonLoadingTask1().execute();
                 }
                 //2번비콘 ( 도서관 관련 )
 
                 else if(Majorid.equals("4660") && Minorid.equals("64001")) {
                     //textView.append("1번 ID : " + beacon.getId2() + " 2번 ID : " + beacon.getId3() + " / " + "Distance : " + Double.parseDouble(String.format("%.3f", beacon.getDistance())) + "m\n");
-                    new JsonLoadingTask2().execute();
+                    //new JsonLoadingTask2().execute();
                 }
                 //3번비콘
                 else if(Majorid.equals("4660") && Minorid.equals("64001")) {
                     //textView.append("1번 ID : " + beacon.getId2() + " 2번 ID : " + beacon.getId3() + " / " + "Distance : " + Double.parseDouble(String.format("%.3f", beacon.getDistance())) + "m\n");
-                    new JsonLoadingTask3().execute();
+                    //new JsonLoadingTask3().execute();
                 }
 
 
@@ -169,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 
         // 푸쉬화면
-       /* Intent intent1 = new Intent(getApplicationContext(), PosterActivity.class);
+       /* Intent intent1 = new Intent(getApplicationContext(), PosterFragment.class);
         intent1.putExtra("image_URL", image_URL);
         intent1.putExtra("URL",URL);
         startActivity(intent1);*/
@@ -178,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
    public void sendCenterPush(String URL,  String image_URL) {
         sendNotification(URL, image_URL);
-        /*Intent intent = new Intent(getApplicationContext(), PosterActivity.class);
+        /*Intent intent = new Intent(getApplicationContext(), PosterFragment.class);
         intent.putExtra("image_URL", image_URL);
        intent.putExtra("URL",URL);
         startActivity(intent);*/
@@ -243,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 //sendNotification("gggg", responseDetails);
                 sendCenterPush("제목", "내용");
 
-                Intent intent1 = new Intent(getApplicationContext(), PosterActivity.class);
+                Intent intent1 = new Intent(getApplicationContext(), PosterFragment.class);
                 intent1.putExtra("image_urlList", image_URL);
                 intent1.putExtra("urlList", URL);
                 startActivity(intent1);
@@ -251,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             else if(chk ==2 ){
                 sendCenterPush("Push", "도서관 좌석정보");
 
-                Intent intent1 = new Intent(getApplicationContext(), PosterActivity.class);
+                Intent intent1 = new Intent(getApplicationContext(), PosterFragment.class);
                 intent1.putExtra("image_urlList", image_urlList);
                 intent1.putExtra("urlList", urlList);
                 startActivity(intent1);

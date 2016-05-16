@@ -36,6 +36,7 @@ dependencies {
     compile 'org.altbeacon:android-beacon-library:2+'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }
 
 

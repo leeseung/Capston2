@@ -126,6 +126,8 @@ public class IntroActivity extends Activity {
 		if(!bluetoothAdapter.isEnabled()) {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, Constants.REQUEST_ENABLE_BT);
+			/*startServiceAndManager();
+			reserveActivityChange(2*1000);*/
 			return;
 		}
 
