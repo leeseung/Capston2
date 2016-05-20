@@ -1,6 +1,7 @@
 package com.example.dell.capston.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,8 +27,19 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.altbeacon.beacon.BeaconParser;
+
 
 public class BlueWaveService extends Service {
+
+	private BeaconManager beaconManager;
+
+	int count = 0;
+	String Majorid;
+	String Minorid;
+
+	protected String proximityUuid;
+	private List<Beacon> beaconList = new ArrayList<>();
 	private static final String TAG = "LLService";
 	
 	// Context, System
@@ -60,7 +72,12 @@ public class BlueWaveService extends Service {
 	@Override
 	public void onCreate() {
 		Log.d(TAG, "# Service - onCreate() starts here");
-		
+
+
+
+
+
+
 		mContext = getApplicationContext();
 		initialize();
 	}
@@ -68,7 +85,7 @@ public class BlueWaveService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(TAG, "# Service - onStartCommand() starts here");
-		
+
 		// If service returns START_STICKY, android restarts service automatically after forced close.
 		// At this time, onStartCommand() method in service must handle null intent.
 		
@@ -115,11 +132,12 @@ public class BlueWaveService extends Service {
 	 *	Private methods
 	 ******************************************************/
 	private void initialize() {
+
 		Log.d(TAG, "# Service : initialize ---");
 		
 		AppSettings.initializeAppSettings(mContext);
 		startServiceMonitoring();
-		
+
 		// Use this check to determine whether BLE is supported on the device. Then
 		// you can selectively disable BLE-related features.
 		if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -344,8 +362,8 @@ public class BlueWaveService extends Service {
 			mBleManager.deleteBeaconName(beacon.getProximityUuid(), beacon.getMajor(), beacon.getMinor());
 		}
 	}
-	
-	
+
+
 	/*****************************************************
 	 *	Handler, Listener, Timer, Sub classes
 	 ******************************************************/
