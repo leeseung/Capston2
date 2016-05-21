@@ -41,14 +41,15 @@ public class DietFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.diet_push, container, false);
 
-        web1 = (WebView) view.findViewById(R.id.Webview1);
+        /*web1 = (WebView) view.findViewById(R.id.Webview1);
 
 
 
         web1.getSettings().setLoadWithOverviewMode(true);
         web1.getSettings().setUseWideViewPort(true);
 
-        web1.loadUrl("http://www.hansung.ac.kr/web/www/life_03_01_t1");
+        web1.loadUrl("http://www.hansung.ac.kr/web/www/life_03_01_t1");*/
+
 
 
         return view;

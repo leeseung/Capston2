@@ -6,8 +6,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
 
 import com.example.dell.capston.R;
 import com.example.dell.capston.contents.MacroManager;
@@ -212,7 +218,8 @@ public class IntroActivity extends Activity {
 				} else {
 					// User did not enable Bluetooth or an error occured
 					Logs.e("BT is not enabled");
-					Toast.makeText(this, R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
+					Toast.makeText(this, "블루투스를 허용하지 않는다면 알람을 받을 수 없습니다.", Toast.LENGTH_SHORT).show();
+					reserveActivityChange(3 * 1000);
 				}
 				break;
 		}	// End of switch(requestCode)
@@ -236,15 +243,24 @@ public class IntroActivity extends Activity {
 
 
 
+		StringBuffer TempBuffer = new StringBuffer();
 		StringBuffer sb1 = new StringBuffer();
 		MyApplication myApplication = MyApplication.instance();
 
-		StringBuffer Monday = new StringBuffer();
-		StringBuffer Tuseday = new StringBuffer();
-		StringBuffer Wendsday = new StringBuffer();
-		StringBuffer Thurday = new StringBuffer();
-		StringBuffer Friday = new StringBuffer();
-		StringBuffer Saturday = new StringBuffer();
+		StringBuffer MondayPut = new StringBuffer();
+		StringBuffer TusedayPut = new StringBuffer();
+		StringBuffer WendsdayPut = new StringBuffer();
+		StringBuffer ThurdayPut = new StringBuffer();
+		StringBuffer FridayPut = new StringBuffer();
+		StringBuffer SaturdayPut = new StringBuffer();
+
+		Map Monday  = new HashMap();
+		Map Tuseday  = new HashMap();
+		Map Wendsday  = new HashMap();
+		Map Thurday   = new HashMap();
+		Map Friday  = new HashMap();
+		Map Saturday  = new HashMap();
+
 
 		/*a= "aaaaaa";
 		b="bbbbbbbb";*/
@@ -253,11 +269,11 @@ public class IntroActivity extends Activity {
 			String chkString = String.valueOf(chk);
 			//113.198.80.214 - 101호 서버
 			//115.21.3.126 - 예찬노트북
-
-			String jsonPage1 = getStringFromUrl("http://113.198.80.214/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
-			String jsonPage2 = getStringFromUrl("http://113.198.80.214/CapstoneDesign/jsps/testJson.jsp?&Beacon=2");
-			String jsonPage3 = getStringFromUrl("http://113.198.80.214/CapstoneDesign/jsps/testJson.jsp?&Beacon=3");
-			String jsonPage4 = getStringFromUrl("http://113.198.80.214/CapstoneDesign/jsps/testJson.jsp?&Beacon=4");
+			// 59.15.234.45 - 예찬컴
+			String jsonPage1 = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=1");
+			String jsonPage2 = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=2");
+			String jsonPage3 = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=3");
+			String jsonPage4 = getStringFromUrl("http://59.15.234.45/CapstoneDesign/jsps/testJson.jsp?&Beacon=4");
 
 			if (chk == 1) {
 
@@ -271,8 +287,9 @@ public class IntroActivity extends Activity {
 					String TypeCheck = info.getString("Type");
 					if(TypeCheck.equals("Poster")) {
 						Beacon1Poster = true;
-						myApplication.image1 = info.getString("image_URL");
-						myApplication.url1 = info.getString("URL");
+						JSONObject info0 = List.getJSONObject(0);
+						myApplication.image1 = info0.getString("image_URL");
+						myApplication.url1 = info0.getString("URL");
 
 						JSONObject info1 = List.getJSONObject(1);
 						myApplication.image2 = info1.getString("image_URL");
@@ -295,39 +312,14 @@ public class IntroActivity extends Activity {
 					}
 
 				}
-				/*for (int i = 0; i < List.length(); i++) {
-					JSONObject info = List.getJSONObject(i);
-					image_URL = info.getString("image_URL");
-					URL = info.getString("URL");
 
-					myApplication.urlList.add(URL);
-					myApplication.image_urlList.add(image_URL);
-				}
-*/
-				// sb.append("[ "+responseData+" ]\n");
-				/*sb1.append(image_URL + "\n");
-				// sb.append(Beacon + "\n");
-				// sb.append(Filename + "\n");
-				sb1.append(URL + "\n");
-				sb1.append("\n");*/
-
-				//sendNotification("HS BEACON", "포스터,강의실");
-
-
-				//sendCenterPush("HS PUSH!" , "gf");
-
-				/*intent1 = new Intent(getApplicationContext(), TestMainActivity.class);
-				intent1.putExtra("image_urlList", image_URL);
-				intent1.putExtra("urlList", URL);
-				startActivity(intent1);
-				bundle = new Bundle();
-				bundle.putString("image_URL", a);
-				bundle.putString("iURL", b);
-				posterActivity = new PosterFragment();
-				posterActivity.setArguments(bundle);*/
 
 
 			} else if (chk == 2) {
+				ArrayList<String> Sort  =  new ArrayList<String>();
+					//비교기능 리스트 초기화
+				//Map map  = new HashMap();
+
 
 
 				//JSONParser parser = new JSONParser();
@@ -345,6 +337,7 @@ public class IntroActivity extends Activity {
 					}
 					//타입이 포스터이면
 					else if(TypeCheck.equals("Siganpyo")) {
+
 						Beacon2EmptyClass = true;
 
 						JSONObject Empty_Siganpyo = (JSONObject) obj1.getJSONObject("Empty_Siganpyo");
@@ -364,107 +357,45 @@ public class IntroActivity extends Activity {
 							Log.e("TAGG", String.valueOf(periods.length()));
 
 							for (int k = 0; k < periods.length(); k++) {
+
 								JSONObject weekOBJ = (JSONObject) periods.getJSONObject(k);
 								String building = weekOBJ.getString("week");
 
 								Log.e("TEMP", building);
 
+
+									String MondayClassroom = classroomsOBJ.getString("classroom");
+									TempBuffer.append(MondayClassroom + "호 :");
+									JSONArray times = (JSONArray) weekOBJ.getJSONArray("times");
+									for (int l = 0; l < times.length(); l++) {
+										JSONObject timesOBJ = (JSONObject) times.getJSONObject(l);
+										String TempTime = timesOBJ.getString("time");
+										if (l != (times.length() - 1))
+											TempBuffer.append(TempTime + "교시, ");
+										else
+											TempBuffer.append(TempTime + "교시");
+									}
+									TempBuffer.append("\n");
 								if (building.equals("월")) {
-									String MondayClassroom = classroomsOBJ.getString("classroom");
-									Monday.append(MondayClassroom + "호 :");
-
-									Log.e("TEMP", String.valueOf(Monday));
-
-									JSONArray times = (JSONArray) weekOBJ.getJSONArray("times");
-
-									Log.e("TAGG", String.valueOf(times.length()));
-
-									for (int l = 0; l < times.length(); l++) {
-										JSONObject timesOBJ = (JSONObject) times.getJSONObject(l);
-										String TempTime = timesOBJ.getString("time");
-										if (l != (times.length() - 1))
-											Monday.append(TempTime + "교시, ");
-										else
-											Monday.append(TempTime + "교시");
-									}
-									Monday.append("\n");
-
-									Log.e("TEMP", String.valueOf(Monday));
-
-								} else if (building.equals("화")) {
-									String MondayClassroom = classroomsOBJ.getString("classroom");
-									Tuseday.append(MondayClassroom + "호 :");
-									JSONArray times = (JSONArray) weekOBJ.getJSONArray("times");
-									for (int l = 0; l < times.length(); l++) {
-										JSONObject timesOBJ = (JSONObject) times.getJSONObject(l);
-										String TempTime = timesOBJ.getString("time");
-										if (l != (times.length() - 1))
-											Tuseday.append(TempTime + "교시, ");
-										else
-											Tuseday.append(TempTime + "교시");
-									}
-									Tuseday.append("\n");
-
-								} else if (building.equals("수")) {
-									String MondayClassroom = classroomsOBJ.getString("classroom");
-									Wendsday.append(MondayClassroom + "호 :");
-									JSONArray times = (JSONArray) weekOBJ.getJSONArray("times");
-									for (int l = 0; l < times.length(); l++) {
-										JSONObject timesOBJ = (JSONObject) times.getJSONObject(l);
-										String TempTime = timesOBJ.getString("time");
-										if (l != (times.length() - 1))
-											Wendsday.append(TempTime + "교시, ");
-										else
-											Wendsday.append(TempTime + "교시");
-									}
-									Wendsday.append("\n");
-
-								} else if (building.equals("목")) {
-									String MondayClassroom = classroomsOBJ.getString("classroom");
-									Thurday.append(MondayClassroom + "호 :");
-									JSONArray times = (JSONArray) weekOBJ.getJSONArray("times");
-									for (int l = 0; l < times.length(); l++) {
-										JSONObject timesOBJ = (JSONObject) times.getJSONObject(l);
-										String TempTime = timesOBJ.getString("time");
-										if (l != (times.length() - 1))
-											Thurday.append(TempTime + "교시, ");
-										else
-											Thurday.append(TempTime + "교시");
-									}
-									Thurday.append("\n");
-
-								} else if (building.equals("금")) {
-									String MondayClassroom = classroomsOBJ.getString("classroom");
-									Friday.append(MondayClassroom + "호 :");
-									JSONArray times = (JSONArray) weekOBJ.getJSONArray("times");
-									for (int l = 0; l < times.length(); l++) {
-										JSONObject timesOBJ = (JSONObject) times.getJSONObject(l);
-										String TempTime = timesOBJ.getString("time");
-										if (l != (times.length() - 1))
-											Friday.append(TempTime + "교시, ");
-										else
-											Friday.append(TempTime + "교시");
-									}
-									Friday.append("\n");
-
-								} else if (building.equals("토")) {
-									String MondayClassroom = classroomsOBJ.getString("classroom");
-									Saturday.append(MondayClassroom + "호 :");
-									JSONArray times = (JSONArray) weekOBJ.getJSONArray("times");
-									for (int l = 0; l < times.length(); l++) {
-										JSONObject timesOBJ = (JSONObject) times.getJSONObject(l);
-										String TempTime = timesOBJ.getString("time");
-										if (l != (times.length() - 1))
-											Saturday.append(TempTime + "교시, ");
-										else
-											Saturday.append(TempTime + "교시");
-									}
-									Saturday.append("\n");
-
+									Monday.put(MondayClassroom, TempBuffer.toString());
 								}
-							/*JSONObject times = (JSONObject) periods.getJSONObject(i);
-							JSONArray time = (JSONArray) times.getJSONArray("times");
-*/
+								else if (building.equals("화")) {
+									Tuseday.put(MondayClassroom, TempBuffer.toString());
+								}
+								else if (building.equals("수")) {
+									Wendsday.put(MondayClassroom, TempBuffer.toString());
+								}
+								else if (building.equals("목")) {
+									Thurday.put(MondayClassroom, TempBuffer.toString());
+								}
+								else if (building.equals("금")) {
+									Friday.put(MondayClassroom, TempBuffer.toString());
+								}
+								else if (building.equals("토")) {
+									Saturday.put(MondayClassroom, TempBuffer.toString());
+								}
+									TempBuffer.delete(0,TempBuffer.length());
+
 							}
 
 
@@ -474,18 +405,69 @@ public class IntroActivity extends Activity {
 					}
 
 				}
+				TreeMap MondayMap = new TreeMap(Monday );
+				TreeMap TusedayMap = new TreeMap(Tuseday );
+				TreeMap WendsdayMap = new TreeMap(Wendsday);
+				TreeMap ThurdayMap = new TreeMap(Thurday);
+				TreeMap FridayMap = new TreeMap(Friday);
+				TreeMap SaturdayMap = new TreeMap(Saturday);
 
-				myApplication.JINRIMonClassRoom = Monday.toString();
+				Iterator MondayMapIter = MondayMap .keySet().iterator();
+				Iterator TusedayMapIter = TusedayMap  .keySet().iterator();
+				Iterator WendsdayMapIter = WendsdayMap.keySet().iterator();
+				Iterator  ThurdayMapIter =  ThurdayMap .keySet().iterator();
+				Iterator FridayMapIter = FridayMap .keySet().iterator();
+				Iterator SaturdayMapIter = SaturdayMap .keySet().iterator();
 
-				myApplication.JINRItuseClassRoom = Tuseday.toString();
 
-				myApplication.JINRIwensClassRoom = Wendsday.toString();
+				while(MondayMapIter.hasNext()) {
+					String key = (String)MondayMapIter.next();
+					String value = (String)MondayMap .get( key );
+					MondayPut.append(value);
+				}
+				while( TusedayMapIter.hasNext()) {
+					String key = (String)TusedayMapIter.next();
+					String value = (String)TusedayMap .get( key );
+					TusedayPut.append(value);
+				}
+				while( WendsdayMapIter.hasNext()) {
+					String key = (String)WendsdayMapIter.next();
+					String value = (String)WendsdayMap .get( key );
+					WendsdayPut.append(value);
+				}
+				while( ThurdayMapIter.hasNext()) {
+					String key = (String)ThurdayMapIter.next();
+					String value = (String)ThurdayMap .get( key );
+					ThurdayPut.append(value);
+				}
+				while( FridayMapIter.hasNext()) {
+					String key = (String)FridayMapIter.next();
+					String value = (String)FridayMap .get( key );
+					FridayPut.append(value);
+				}
+				while( SaturdayMapIter.hasNext()) {
+					String key = (String)SaturdayMapIter.next();
+					String value = (String)SaturdayMap .get( key );
+					SaturdayPut.append(value);
+				}
 
-				myApplication.JINRIthursClassRoom = Thurday.toString();
 
-				myApplication.JINRIfriClassRoom= Friday.toString();
+				//myApplication.JINRIMonClassRoom = Monday.toString();
 
-				myApplication.JINRIsaturClassRoom = Saturday.toString();
+				myApplication.JINRIMonClassRoom = MondayPut.toString();
+
+				myApplication.JINRItuseClassRoom = TusedayPut.toString();
+
+				myApplication.JINRIwensClassRoom = WendsdayPut.toString();
+
+				myApplication.JINRIthursClassRoom = ThurdayPut.toString();
+
+				myApplication.JINRIfriClassRoom= FridayPut.toString();
+
+				myApplication.JINRIsaturClassRoom = SaturdayPut.toString();
+
+
+			} else if(chk == 4){
 
 
 			}
